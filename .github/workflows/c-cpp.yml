@@ -236,7 +236,7 @@ jobs:
     - name: install packages
       run: brew install zstd
     - name: build
-      run: make -j8 zstd=1 LDFLAGS=-L/opt/homebrew/lib/ CPPFLAGS=-I/opt/homebrew/include/
+      run: LDFLAGS=-L/opt/homebrew/lib/ CPPFLAGS=-I/opt/homebrew/include/ make -j8 zstd=1
     - name: test
       run: make test zstd=1
   arm64:
