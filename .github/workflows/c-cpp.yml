@@ -195,9 +195,9 @@ jobs:
       run: make test
     - name: make mt
       run: examples/mt/build.sh
-  # os_x_12:
-  #   name: OSX 12
-  #   runs-on: macos-12
+  # os_x_13:
+  #   name: OSX 13
+  #   runs-on: macos-13
   #   steps:
   #   - uses: actions/checkout@v2
   #   - name: build
@@ -206,28 +206,17 @@ jobs:
   #     run: make test
   #   - name: examples
   #     run: make examples
-  os_x_13:
-    name: OSX 13
-    runs-on: macos-13
-    steps:
-    - uses: actions/checkout@v2
-    - name: build
-      run: make -j8
-    - name: test
-      run: make test
-    - name: examples
-      run: make examples
-  os_x_13_zstd:
-    name: OSX 13 zstd
-    runs-on: macos-13
-    steps:
-    - uses: actions/checkout@v2
-    - name: install packages
-      run: brew install zstd
-    - name: build
-      run: make -j8 zstd=1
-    - name: test
-      run: make test zstd=1
+  # os_x_13_zstd:
+  #   name: OSX 13 zstd
+  #   runs-on: macos-13
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: install packages
+  #     run: brew install zstd
+  #   - name: build
+  #     run: make -j8 zstd=1
+  #   - name: test
+  #     run: make test zstd=1
   os_x_14:
     name: OSX 14
     runs-on: macos-14
@@ -239,6 +228,17 @@ jobs:
       run: make test
     - name: examples
       run: make examples
+  os_x_14_zstd:
+    name: OSX 14
+    runs-on: macos-14
+    steps:
+    - uses: actions/checkout@v2
+    - name: install packages
+      run: brew install zstd
+    - name: build
+      run: make -j8 zstd=1
+    - name: test
+      run: make test zstd=1
   arm64:
     name: ubuntu arm
     runs-on: ubuntu-latest
