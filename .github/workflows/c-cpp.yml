@@ -229,14 +229,14 @@ jobs:
     - name: examples
       run: make examples
   os_x_14_zstd:
-    name: OSX 14
+    name: OSX 14 zstd
     runs-on: macos-14
     steps:
     - uses: actions/checkout@v2
     - name: install packages
       run: brew install zstd
     - name: build
-      run: make -j8 zstd=1
+      run: make -j8 zstd=1 LDFLAGS=-L/opt/homebrew/lib/ CPPFLAGS=-I/opt/homebrew/include/
     - name: test
       run: make test zstd=1
   arm64:

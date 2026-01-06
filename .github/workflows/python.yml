@@ -130,28 +130,6 @@ jobs:
           ldd --version && gcc --version && python3 --version &&
           make pyslow5 &&
           python3 -m unittest -v python/test.py"
-  # os_x_12:
-  #   name: pyslow5 mac os 12
-  #   runs-on: macos-12
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: install packages
-  #     run: pip3 install numpy setuptools
-  #   - name: build
-  #     run: make pyslow5
-  #   - name: test
-  #     run: python3 -m unittest -v python/test.py
-  os_x_13:
-    name: pyslow5 mac os 13
-    runs-on: macos-13
-    steps:
-    - uses: actions/checkout@v2
-    - name: install packages
-      run: pip3 install numpy setuptools
-    - name: build
-      run: make pyslow5
-    - name: test
-      run: python3 -m unittest -v python/test.py
   os_x_14:
     name: pyslow5 mac os 14
     runs-on: macos-14
@@ -159,6 +137,17 @@ jobs:
     - uses: actions/checkout@v2
     - name: install packages
       run: pip3 install numpy setuptools --break-system-packages
+    - name: build
+      run: make pyslow5
+    - name: test
+      run: python3 -m unittest -v python/test.py
+  os_x_15:
+    name: pyslow5 mac os 15
+    runs-on: macos-15
+    steps:
+    - uses: actions/checkout@v2
+    - name: install packages
+      run: pip3 install numpy setuptools
     - name: build
       run: make pyslow5
     - name: test
