@@ -409,7 +409,8 @@ class TestWriteAux(unittest.TestCase):
                "predicted_scaling_scale": None,
                "num_reads_since_mux_change": None,
                "time_since_mux_change": None,
-               "num_minknow_events": None}
+               "num_minknow_events": None,
+               "open_pore_level": None,}
         _, aux = self.F.get_empty_record(aux=True)
         for i, rec in enumerate(aux):
             with self.subTest(i=i, attr=rec):
