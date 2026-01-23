@@ -98,6 +98,7 @@ cdef class Open:
     cdef char *num_reads_since_mux_change
     cdef char *time_since_mux_change
     cdef char *num_minknow_events
+    cdef char *open_pore_level
     cdef char **end_reason_labels
     cdef pyslow5.uint8_t end_reason_labels_len
     cdef char *channel_number_val
@@ -113,6 +114,7 @@ cdef class Open:
     cdef pyslow5.uint32_t num_reads_since_mux_change_val
     cdef float time_since_mux_change_val
     cdef pyslow5.uint64_t num_minknow_events_val
+    cdef float open_pore_level_val
     cdef char **channel_number_val_array
     cdef double *median_before_val_array
     cdef pyslow5.int32_t *read_number_val_array
@@ -126,6 +128,7 @@ cdef class Open:
     cdef pyslow5.uint32_t *num_reads_since_mux_change_val_array
     cdef float *time_since_mux_change_val_array
     cdef pyslow5.uint64_t *num_minknow_events_val_array
+    cdef float *open_pore_level_val_array
 
     cdef np.int16_t[:] temp_array 
 
@@ -205,6 +208,7 @@ cdef class Open:
         self.num_reads_since_mux_change = strdup("num_reads_since_mux_change")
         self.time_since_mux_change = strdup("time_since_mux_change")
         self.num_minknow_events = strdup("num_minknow_events")
+        self.open_pore_level = strdup("open_pore_level")
         self.end_reason_labels = NULL
         self.end_reason_labels_len = 0
         self.channel_number_val = NULL
@@ -220,6 +224,7 @@ cdef class Open:
         self.num_reads_since_mux_change_val = 0
         self.time_since_mux_change_val = 0.0
         self.num_minknow_events_val = 0
+        self.open_pore_level_val = 0.0
         self.channel_number_val_array = NULL
         self.median_before_val_array = NULL
         self.read_number_val_array = NULL
@@ -233,6 +238,7 @@ cdef class Open:
         self.num_reads_since_mux_change_val_array = NULL
         self.time_since_mux_change_val_array = NULL
         self.num_minknow_events_val_array = NULL
+        self.open_pore_level_val_array = NULL
 
 
         self.total_time_slow5_get_next = 0.0
@@ -391,6 +397,7 @@ cdef class Open:
         free(self.num_reads_since_mux_change)
         free(self.time_since_mux_change)
         free(self.num_minknow_events)
+        free(self.open_pore_level)
         
         if self.end_reason_labels is not NULL:
             for i in range(self.end_reason_labels_len):
@@ -1537,6 +1544,7 @@ cdef class Open:
                "num_reads_since_mux_change": None,
                "time_since_mux_change": None,
                "num_minknow_events": None,
+               "open_pore_level": None,
                }
 
         if aux:
@@ -1583,6 +1591,7 @@ cdef class Open:
                      "num_reads_since_mux_change": type(1),
                      "time_since_mux_change": type(1.0),
                      "num_minknow_events": type(1),
+                     "open_pore_level": type(1.0),
                      }
 
         C_aux_types = {"channel_number": SLOW5_STRING,
@@ -1598,6 +1607,7 @@ cdef class Open:
                      "num_reads_since_mux_change": SLOW5_UINT32_T,
                      "time_since_mux_change": SLOW5_FLOAT,
                      "num_minknow_events": SLOW5_UINT64_T,
+                     "open_pore_level": SLOW5_FLOAT,
                      }
 
         for a in user_aux_types:
@@ -1642,6 +1652,7 @@ cdef class Open:
                         "num_reads_since_mux_change": type(1),
                         "time_since_mux_change": type(1.0),
                         "num_minknow_events": type(1),
+                        "open_pore_level": type(1.0),
                         }
 
         new_aux = {}
@@ -1710,6 +1721,9 @@ cdef class Open:
                     elif a == "num_minknow_events":
                         self.num_minknow_events_val = <uint64_t>aux[a]
                         new_aux[a] = aux[a]
+                    elif a == "open_pore_level":
+                        self.open_pore_level_val = <float>aux[a]
+                        new_aux[a] = aux[a]
                     else:
                          self.logger.error("_record_type_validation {}: {} user aux field unknown?".format(a, aux[a]))
 
@@ -1745,6 +1759,7 @@ cdef class Open:
                         "num_reads_since_mux_change": type(1),
                         "time_since_mux_change": type(1.0),
                         "num_minknow_events": type(1),
+                        "open_pore_level": type(1.0),
                         }
 
         new_aux = {}
@@ -1799,6 +1814,8 @@ cdef class Open:
                     elif a == "time_since_mux_change":
                         new_aux[a] = aux[a]
                     elif a == "num_minknow_events":
+                        new_aux[a] = aux[a]
+                    elif a == "open_pore_level":
                         new_aux[a] = aux[a]
                     else:
                         self.logger.error("_record_type_validation {}: {} user aux field unknown".format(a, aux[a]))
@@ -1896,6 +1913,7 @@ cdef class Open:
                      "num_reads_since_mux_change": type(1),
                      "time_since_mux_change": type(1.0),
                      "num_minknow_events": type(1),
+                     "open_pore_level": type(1.0),
                      }
         
         aux_types_keys = [
@@ -1912,6 +1930,7 @@ cdef class Open:
             "num_reads_since_mux_change",
             "time_since_mux_change",
             "num_minknow_events",
+            "open_pore_level",
         ]
 
         self.logger.debug("write_record: _record_type_validation running")
@@ -2052,6 +2071,8 @@ cdef class Open:
                     ret = slow5_aux_set(self.write, self.time_since_mux_change, <const void *>&self.time_since_mux_change_val, self.s5.header)
                 elif a == "num_minknow_events":
                     ret = slow5_aux_set(self.write, self.num_minknow_events, <const void *>&self.num_minknow_events_val, self.s5.header)
+                elif a == "open_pore_level":
+                    ret = slow5_aux_set(self.write, self.open_pore_level, <const void *>&self.open_pore_level_val, self.s5.header)
                 else:
                     ret = -1
                 if ret < 0:
@@ -2081,6 +2102,7 @@ cdef class Open:
             self.num_reads_since_mux_change_val = 0
             self.time_since_mux_change_val = 0.0
             self.num_minknow_events_val = 0
+            self.open_pore_level_val = 0
 
 
         # free memory
@@ -2114,6 +2136,7 @@ cdef class Open:
                      "num_reads_since_mux_change": type(1),
                      "time_since_mux_change": type(1.0),
                      "num_minknow_events": type(1),
+                     "open_pore_level": type(1.0),
                      }
         
         aux_types_keys = [
@@ -2130,6 +2153,7 @@ cdef class Open:
             "num_reads_since_mux_change",
             "time_since_mux_change",
             "num_minknow_events",
+            "open_pore_level",
         ]
 
         # check if empty dic was given
@@ -2165,6 +2189,7 @@ cdef class Open:
             self.num_reads_since_mux_change_val_array = <uint32_t *> malloc(sizeof(uint32_t)*batch_len)
             self.time_since_mux_change_val_array = <float *> malloc(sizeof(float)*batch_len)
             self.num_minknow_events_val_array = <uint64_t *> malloc(sizeof(uint64_t)*batch_len)
+            self.open_pore_level_val_array = <float *> malloc(sizeof(float)*batch_len)
             for i, idx in enumerate(batch):
                 if aux is not None:
                     checked_record, checked_aux = self._multi_record_type_validation(records[idx], aux[idx])
@@ -2196,6 +2221,8 @@ cdef class Open:
                             self.time_since_mux_change_val_array[i] = <float>checked_aux[a]
                         elif a == "num_minknow_events":
                             self.num_minknow_events_val_array[i] = <uint64_t>checked_aux[a]
+                        elif a == "open_pore_level":
+                            self.open_pore_level_val_array[i] = <float>checked_aux[a]
                     checked_auxs[idx] = checked_aux
                 else:
                     checked_record, checked_aux = self._record_type_validation(records[idx], aux)
@@ -2345,6 +2372,8 @@ cdef class Open:
                             ret = slow5_aux_set(self.twrite[idx], self.time_since_mux_change, <const void *>&self.time_since_mux_change_val_array[idx], self.s5.header)
                         elif a == "num_minknow_events":
                             ret = slow5_aux_set(self.twrite[idx], self.num_minknow_events, <const void *>&self.num_minknow_events_val_array[idx], self.s5.header)
+                        elif a == "open_pore_level":
+                            ret = slow5_aux_set(self.twrite[idx], self.open_pore_level, <const void *>&self.open_pore_level_val_array[idx], self.s5.header)
                         else:
                             ret = -1
                         if ret < 0:
@@ -2389,6 +2418,7 @@ cdef class Open:
                 free(self.num_reads_since_mux_change_val_array)
                 free(self.time_since_mux_change_val_array)
                 free(self.num_minknow_events_val_array)
+                free(self.open_pore_level_val_array)
 
         end_multi_write = time.time() - start_multi_write
         self.total_multi_write_time = self.total_multi_write_time + end_multi_write
